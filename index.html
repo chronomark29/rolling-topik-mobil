@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F6F8FF">
+<meta name="description" content="Game rolling pertanyaan cinta buat tongkrongan di mobil. Gratis, langsung main.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rolling Topik">
 <title>Rolling Topik Mobil</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -190,8 +196,8 @@ svg { display: block; }
 .input input { flex: 1; min-width: 0; border: 0; outline: 0; font: inherit; color: var(--fg); background: transparent; padding: 13px 0; }
 .field .btn { min-height: 0; padding: 0 16px; border-width: 2px; border-color: var(--fg); }
 .hint { font-size: .8rem; color: var(--muted); }
-.presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-@media (max-width: 380px) { .presets { grid-template-columns: 1fr; } .preset { flex-direction: row; align-items: center; } }
+.presets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (max-width: 340px) { .presets { grid-template-columns: 1fr; } }
 .preset { position: relative; border: 1.5px solid var(--line); background: #fff; border-radius: 16px; padding: 12px 10px 10px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 6px; transition: border-color .15s, background .15s, transform .15s; }
 .preset:hover { transform: translateY(-2px); }
 .preset .emo { font-size: 1.6rem; line-height: 1; }
@@ -363,6 +369,35 @@ svg { display: block; }
 .roll-ov .dice-box { --s: 120px; }
 .roll-ov .hand { font-size: 1.8rem; color: var(--primary); margin-top: 18px; text-align: center; }
 .fx { position: fixed; z-index: 40; pointer-events: none; width: 16px; height: 16px; margin: -8px 0 0 -8px; }
+.brandline .install { margin-left: auto; border: 1.5px solid var(--primary); color: var(--primary); background: #fff; border-radius: 999px; padding: 6px 12px; font-size: .78rem; font-weight: 700; cursor: pointer; }
+.daily { background: var(--fg); color: #fff; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; }
+.daily::after { content: ""; position: absolute; right: -40px; top: -40px; width: 130px; height: 130px; border-radius: 50%; background: #F9C94C22; }
+.daily-h { display: flex; justify-content: space-between; gap: 8px; font-size: .8rem; }
+.daily-h span { color: var(--yellow); font-weight: 800; }
+.daily-h small { color: #ffffffaa; }
+.daily p { font-weight: 700; font-size: 1.05rem; line-height: 1.35; position: relative; z-index: 1; }
+.daily-f { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.daily-f span { color: #ffffffaa; font-size: .76rem; }
+.btn.sm { min-height: 40px; padding: 6px 14px; font-size: .85rem; border-radius: 12px; }
+.cq { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.cq li { display: flex; align-items: center; gap: 8px; background: var(--soft); border-radius: 12px; padding: 6px 6px 6px 12px; font-size: .85rem; font-weight: 600; }
+.cq li span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.reacts { display: flex; gap: 8px; flex: none; }
+.react { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 6px; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 6px 4px; font-size: 1.15rem; cursor: pointer; transition: transform .15s cubic-bezier(.3,1.6,.5,1); }
+.react b { font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.react:active { transform: scale(.88); }
+.react.on { border-color: var(--primary); background: var(--soft); }
+.react.on b { color: var(--primary); }
+.fx-emo { position: fixed; z-index: 40; pointer-events: none; font-size: 2rem; margin: -1rem 0 0 -1rem; }
+.lvl-pill { align-self: flex-start; background: #fff; border: 1.5px solid var(--line); border-radius: 999px; padding: 4px 12px; font-size: .8rem; font-weight: 700; }
+.awards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.award { background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 2px; }
+.award .e { font-size: 1.6rem; line-height: 1.2; }
+.award small { color: var(--muted); font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.award strong { font-size: 1rem; overflow-wrap: anywhere; }
+.award span { font-size: .8rem; color: var(--primary); font-weight: 700; }
+.award.best { grid-column: 1 / -1; background: var(--soft); border-color: #DCD5FF; }
+.award.best strong { font-weight: 700; font-size: .92rem; }
 .toast { position: fixed; left: 50%; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: #fff; font-weight: 700; padding: 10px 18px; border-radius: 999px; z-index: 45; font-size: .88rem; max-width: calc(100% - 32px); text-align: center; box-shadow: 0 10px 24px -10px #1F1F3888; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -448,28 +483,73 @@ const BONUS = { id: "bn", name: "Cadangan 🔥", sub: "Level “anjir, kok perta
   "Kamu ingin seseorang mencintaimu apa adanya, tapi bagian mana dari dirimu yang sebenarnya belum berani kamu tunjukkan?",
   "Kalau ternyata kamu bukan orang yang paling terluka dalam kisah cintamu yang paling membekas, apa yang harus kamu akui tentang dirimu sendiri?" ] };
 
-// Play order is not number order: the final round goes last, the new rounds sit before it.
-const PLAY_ORDER = ["r1", "r2", "r3", "r4", "r5", "jb", "dl", "tk", "r6"];
+// Safe rounds for family, office or strangers (asked for by the "mode aman" critique). Numbered 54–73.
+const EXTRA = [
+  { id: "sn", name: "Santai Dulu", sub: "Pemanasan aman, cocok buat siapa aja", fresh: true, qs: [
+    "Lagu apa yang langsung bikin kamu inget satu orang tertentu?",
+    "Film romantis apa yang menurutmu paling overrated, dan kenapa?",
+    "Kalau tongkrongan ini jadi grup band, kamu pegang posisi apa?",
+    "Kebiasaan kecil orang lain apa yang bikin kamu langsung respek?",
+    "Kencan pertama ideal: mahal tapi kaku, atau murah tapi seru?",
+    "Chat paling random yang pernah bikin kamu senyum sendiri?",
+    "Kalau perjalanan ini punya judul playlist, judulnya apa?",
+    "Red flag paling kecil apa yang tetap bikin kamu ilfeel?" ] },
+  { id: "pk", name: "PDKT Mode", sub: "Buat yang lagi deket tapi belum jadian", fresh: true, qs: [
+    "Kode paling halus yang pernah kamu kasih ke gebetan. Dia nangkep nggak?",
+    "Mending nembak duluan terus ditolak, atau nunggu dan nggak pernah tahu?",
+    "Berapa lama balas chat yang menurutmu masih wajar pas PDKT?",
+    "Gebetanmu ternyata temen deket mantanmu. Lanjut atau mundur?",
+    "Hal apa yang biasanya bikin kamu ilfeel di minggu pertama PDKT?",
+    "Pernah salah paham ngira seseorang suka sama kamu? Ceritain." ] },
+  { id: "kl", name: "Edisi Keluarga & Mudik", sub: "Aman dimainin bareng om, tante, dan sepupu", fresh: true, qs: [
+    "Pertanyaan paling nyebelin dari keluarga pas kumpul, dan jawaban andalanmu?",
+    "Kisah cinta siapa di keluargamu yang paling pengen kamu tiru?",
+    "Nasihat cinta dari orang tua yang dulu kamu ketawain, tapi sekarang kamu setujui?",
+    "Kalau pacarmu ketemu keluarga besarmu, siapa yang paling kamu khawatirin?",
+    "Tradisi keluarga apa yang pengen kamu terusin nanti?",
+    "Lagu wajib di mobil keluargamu waktu kecil apa?" ] },
+];
+const LVL = { sn: 1, kl: 1, r1: 2, r3: 2, r4: 2, pk: 2, dl: 2, cu: 2, r2: 3, r5: 3, jb: 3, tk: 3, r6: 3, bn: 3 };
+const LVL_TAG = { 1: "🌱 Santai", 2: "🔥 Deep", 3: "🌶️ Pedas" };
+
+// Play order is not number order: light rounds open, the final round goes last.
+const BASE_ORDER = ["sn", "kl", "r1", "pk", "r2", "r3", "r4", "r5", "jb", "dl", "tk", "r6"];
+let PLAY_ORDER = BASE_ORDER;
+const withCu = ids => CUSTOM.length ? [...ids, "cu"] : ids;
 const PRESETS = {
-  aman: { label: "Alur aman", hint: "Pemanasan, brutal, final", rounds: ["r1", "r2", "r6"], mix: false },
-  full: { label: "Full semua", hint: "Semua ronde urut", rounds: PLAY_ORDER, mix: false },
-  acak: { label: "Acak bebas", hint: "Semua dikocok", rounds: PLAY_ORDER, mix: true },
+  santai: { label: "Mode santai", hint: "Aman buat keluarga & kantor", rounds: () => withCu(["sn", "kl", "pk"]), mix: false },
+  aman: { label: "Alur deep", hint: "Pemanasan, brutal, final", rounds: () => withCu(["r1", "r2", "r6"]), mix: false },
+  full: { label: "Full semua", hint: "Semua ronde urut", rounds: () => PLAY_ORDER, mix: false },
+  acak: { label: "Acak bebas", hint: "Semua dikocok", rounds: () => PLAY_ORDER, mix: true },
 };
 
-// Flat numbered list: 1..53
+// Flat numbered list: 1..73, custom questions from 101
 const ALL = {};
 const BY_ROUND = {};
 let no = 0;
-for (const r of [...ROUNDS, BONUS]) {
+for (const r of [...ROUNDS, BONUS, ...EXTRA]) {
   BY_ROUND[r.id] = r;
   r.nos = r.qs.map(text => { no++; ALL[no] = { no, r: r.id, text }; return no; });
 }
 const MAX_NO = no;
 
+// Custom questions live in this browser only; they get numbers from 101 up.
+const CUSTOM_KEY = "rolling-topik-mobil-custom";
+let CUSTOM = (() => { try { const c = JSON.parse(localStorage.getItem(CUSTOM_KEY)); return Array.isArray(c) ? c.filter(x => typeof x === "string").slice(0, 50) : []; } catch { return []; } })();
+BY_ROUND.cu = { id: "cu", name: "Bikinan Tongkrongan", sub: "Pertanyaan dari kalian sendiri", qs: [], nos: [] };
+function syncCustom() {
+  for (const k in ALL) if (+k > 100) delete ALL[k];
+  CUSTOM.forEach((text, k) => { ALL[101 + k] = { no: 101 + k, r: "cu", text }; });
+  BY_ROUND.cu.qs = CUSTOM; BY_ROUND.cu.nos = CUSTOM.map((_, k) => 101 + k);
+  PLAY_ORDER = CUSTOM.length ? [...BASE_ORDER.slice(0, -1), "cu", "r6"] : BASE_ORDER;
+  try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(CUSTOM)); } catch {}
+}
+syncCustom();
+
 const KEY = "rolling-topik-mobil-v1";
 const fresh = () => ({
   phase: "setup", names: ["Dinda", "Raka", "Sasa"], example: true,
-  preset: "aman", rounds: [...PRESETS.aman.rounds], mix: false,
+  preset: "aman", rounds: PRESETS.aman.rounds(), mix: false,
 });
 let S = load() || fresh();
 const TUT_KEY = "rolling-topik-mobil-tut";
@@ -490,10 +570,10 @@ document.addEventListener("visibilitychange", () => { if (document.visibilitySta
 // ---------- game logic ----------
 function start() {
   const order = PLAY_ORDER.filter(id => S.rounds.includes(id));
-  S.players = S.names.map(n => ({ n, c: 0 }));
+  S.players = S.names.map(n => ({ n, c: 0, sk: 0, tw: 0 }));
   if (S.mix) { S.order = ["mix"]; S.pools = { mix: order.flatMap(id => BY_ROUND[id].nos) }; }
   else { S.order = order; S.pools = Object.fromEntries(order.map(id => [id, [...BY_ROUND[id].nos]])); }
-  S.ri = 0; S.asker = 0; S.answerer = null; S.last = null; S.q = null; S.used = []; S.bonusDone = false;
+  S.ri = 0; S.asker = 0; S.answerer = null; S.last = null; S.q = null; S.used = []; S.bonusDone = false; S.votes = {};
   S.phase = "between";
   wake(); render();
 }
@@ -521,6 +601,7 @@ function roll() {
   render(true);
 }
 function skip() {
+  if (S.answerer != null) S.players[S.answerer].sk = (S.players[S.answerer].sk || 0) + 1;
   const before = S.order[S.ri];
   if (draw()) {
     ui.twist = false;
@@ -639,10 +720,11 @@ function hud() {
 function vSetup() {
   const count = PLAY_ORDER.filter(id => S.rounds.includes(id)).reduce((a, id) => a + BY_ROUND[id].qs.length, 0);
   const ok = S.names.length >= 2 && S.rounds.length > 0;
-  const emo = { aman: "🔥", full: "⚡", acak: "🎲" };
+  const emo = { santai: "🌱", aman: "🔥", full: "⚡", acak: "🎲" };
+  const dq = daily();
   return `<section class="screen"><div class="scroll"><div class="setup-grid">
     <div class="hero">
-      <div class="brandline" data-in><span class="badge">${CROWN_W}</span>Rolling Topik Mobil</div>
+      <div class="brandline" data-in><span class="badge">${CROWN_W}</span>Rolling Topik Mobil${canInstall() ? `<button class="install" data-a="install">⬇ Pasang app</button>` : ""}</div>
       <div class="hero-art tilt">
         <p class="hand note-top">Ngobrol, jawab,<br>dapat poin! ↘</p>
         <div data-in="logo">${LOGO}</div>
@@ -650,6 +732,7 @@ function vSetup() {
         <div class="bubble" data-in="pop">Topiknya bisa<br>kamu tentuin!</div>
       </div>
       <p class="tagline" data-in>Satu nanya, satu jawab, sisanya boleh gali. Jawab jujur, jangan cuma “tergantung”.</p>
+      <div class="daily" data-in><div class="daily-h"><span>🌙 Pertanyaan malam ini</span><small>${todayLabel()}</small></div><p>${esc(dq.text)}</p><div class="daily-f"><span>Sama buat semua orang hari ini. Tanya ke temen lo!</span><button class="btn soft sm" data-a="shareDaily">📸 Share</button></div></div>
       <div class="hero-road" data-in>${ROAD}${CAR}</div>
     </div>
     <div class="setup-cards" style="display:flex;flex-direction:column;gap:14px">
@@ -663,7 +746,13 @@ function vSetup() {
         <div class="panel-h"><span class="n">2</span><div><h2>Gaya main</h2><p>Pilih tingkat keseruan sesuai mood perjalanan.</p></div></div>
         <div class="presets">${Object.entries(PRESETS).map(([k, v]) => `<button class="preset" data-a="preset" data-k="${k}" aria-pressed="${S.preset === k}"><span class="ck">${I.check}</span><span class="emo" aria-hidden="true">${emo[k]}</span><span><b>${v.label}</b><small>${v.hint}</small></span></button>`).join("")}</div>
         <button class="info" data-a="custom" aria-expanded="${!!ui.custom}"><span class="i">i</span><span><b>Atur ronde sendiri · ${S.rounds.length} ronde, ${count} pertanyaan</b><small>Cadangan 🔥 (49–53) kebuka pas semua ronde kelar.</small></span>${I.chev}</button>
-        ${ui.custom ? `<div class="rounds">${PLAY_ORDER.map(id => { const r = BY_ROUND[id]; return `<button class="round" data-a="round" data-id="${id}" aria-pressed="${S.rounds.includes(id)}"><span class="box">${I.check}</span><span class="t"><b>${esc(r.name)}${r.fresh ? `<span class="tag-new">BARU</span>` : ""}</b><small>${esc(r.sub)}</small></span><span class="no">${r.nos[0]}–${r.nos[r.nos.length - 1]}</span></button>`; }).join("")}</div>` : ""}
+        ${ui.custom ? `<div class="rounds">${PLAY_ORDER.map(id => { const r = BY_ROUND[id]; return `<button class="round" data-a="round" data-id="${id}" aria-pressed="${S.rounds.includes(id)}"><span class="box">${I.check}</span><span class="t"><b>${esc(r.name)}${r.fresh ? `<span class="tag-new">BARU</span>` : ""}</b><small>${LVL_TAG[LVL[id]]} · ${esc(r.sub)}</small></span><span class="no">${id === "cu" ? `${r.nos.length} soal` : `${r.nos[0]}–${r.nos[r.nos.length - 1]}`}</span></button>`; }).join("")}</div>` : ""}
+      </div>
+      <div class="panel" data-in>
+        <div class="panel-h"><span class="n">3</span><div><h2>Pertanyaan bikinan kalian</h2><p>Tulis pertanyaan jebakan sendiri. Masuk ke ronde “Bikinan Tongkrongan”.</p></div></div>
+        ${CUSTOM.length ? `<ul class="cq">${CUSTOM.map((q, i) => `<li data-cq="${i}"><span>${esc(q)}</span><button class="chip-btn" data-a="cdel" data-i="${i}" aria-label="Hapus pertanyaan">${I.x}</button></li>`).join("")}</ul>` : ""}
+        <form class="field" id="qf"><label class="input" id="cqbox"><span aria-hidden="true">✍️</span><input id="cq" maxlength="140" placeholder="Contoh: Mantan siapa yang paling susah dilupain?" enterkeyhint="done" autocomplete="off" aria-label="Pertanyaan baru"></label><button class="btn" type="submit">Tambah</button></form>
+        ${CUSTOM.length ? `<button class="btn soft" data-a="sharePack">🔗 Kirim pack ${CUSTOM.length} pertanyaan ke temen</button>` : `<p class="hint">Pertanyaannya bisa dikirim ke tongkrongan lain lewat link.</p>`}
       </div>
       <div class="sticky-bar" data-in>
         <div class="bar"><button class="btn secondary" data-a="tut0">${I.book} Cara main</button><button class="btn primary" data-a="start" ${ok ? "" : "disabled"}>${I.dice} Gas mulai ${I.arrow}</button></div>
@@ -704,7 +793,8 @@ function vCard() {
         <p class="nudge"><span aria-hidden="true">💬</span><span>Abis dijawab, satu orang wajib nanya: <b>“Kenapa lo bisa sampe mikir gitu?”</b> Jawaban “tergantung” tanpa contoh nggak dihitung.</span></p>
       </article>
     </div>
-    <div class="swipe-hint" aria-hidden="true"><span>← geser buat skip</span><span>geser buat lanjut →</span></div>
+    <div class="reacts" data-in>${REACTS.map(([k, e, l]) => `<button class="react${(S.votes?.[S.q]?.[k] || 0) ? " on" : ""}" data-a="react" data-k="${k}" aria-label="${l}"><span aria-hidden="true">${e}</span><b>${S.votes?.[S.q]?.[k] || l}</b></button>`).join("")}<button class="react" data-a="shareQ" aria-label="Share pertanyaan jadi gambar"><span aria-hidden="true">📸</span><b>Share</b></button></div>
+    ${S.used.length <= 3 ? `<div class="swipe-hint" aria-hidden="true"><span>← geser buat skip</span><span>geser buat lanjut →</span></div>` : ""}
     <div class="bar"><button class="btn secondary" data-a="skip">Skip</button><button class="btn soft" data-a="twist">Plot twist</button></div>
     <button class="btn primary" data-a="next" style="flex:none">Lanjut, ganti penanya ${I.arrow}</button>
   </section>`;
@@ -717,6 +807,7 @@ function vBetween() {
     <p class="kicker" data-in>${S.ri > 0 ? "Ronde sebelumnya kelar ✓ Next stop:" : "Kencangkan sabuk, ronde pertama:"}</p>
     <h1 class="slam" data-in="slam">${esc(isMix ? "Acak bebas" : r.name)}</h1>
     <p class="muted" data-in>${esc(isMix ? "Semua pertanyaan dikocok jadi satu" : r.sub)}${r && r.hot ? ". Ini level paling nyelekit, inget skip itu boleh." : ""}</p>
+    ${isMix ? "" : `<span class="lvl-pill" data-in>${LVL_TAG[LVL[id]]}</span>`}
     <div class="map" data-in><div class="rd"></div>
       ${S.order.map((_, k) => `<span class="pin${k < S.ri ? " done" : k === S.ri ? " cur" : ""}" style="left:${pos(k)}%"><i></i>${k + 1}</span>`).join("")}
       <span class="car-pos" id="mapcar" style="position:absolute;top:0;left:${pos(S.ri)}%" data-from="${pos(Math.max(0, S.ri - 1))}">${CAR}</span>
@@ -731,6 +822,8 @@ function vEnd() {
     <h1 class="slam" data-in="slam">Udah <span>pada spill</span> semua?</h1>
     <p class="muted" data-in>${S.used.length} pertanyaan kejawab di perjalanan ini.</p>
     <div class="stats">${ps.map(p => `<div class="stat" data-in><span class="nm">${esc(p.n)}</span><span class="bar-bg"><span class="bar-fill" style="display:block;transform:scaleX(${p.c / max})"></span></span><span class="ct">${p.c}x</span></div>`).join("")}</div>
+    <div class="awards">${awards().map(a => `<div class="award${a.best ? " best" : ""}" data-in><span class="e" aria-hidden="true">${a.e}</span><small>${a.t}</small><strong>${esc(a.who)}</strong><span>${esc(a.d)}</span></div>`).join("")}</div>
+    <button class="btn soft" data-a="shareEnd" data-in>📸 Share hasil ke story</button>
   </div></div>
   ${S.bonusDone ? "" : `<button class="btn primary" data-a="bonus" style="flex:none">🔥 Buka cadangan</button>`}
   <div class="bar"><button class="btn secondary" data-a="again">Main ulang</button><button class="btn ghost" data-a="quit">Ganti pemain</button></div></section>`;
@@ -747,6 +840,8 @@ const TUT = [
     b: `<p>Pencet <b>Roll pertanyaan</b>, dadu guling, kartu kebuka. Yang ditunjuk wajib jawab jujur.</p><p>Abis itu satu orang wajib nanya: <b>“Kenapa lo bisa sampe mikir gitu?”</b></p>` },
   { t: "4. Geser kartunya", art: () => `<div class="mini-btns"><span>← Skip</span><span>Lanjut →</span><span>Plot twist</span><span># Pilih nomor</span></div>`,
     b: `<p><b>Geser kiri</b> buat skip, <b>geser kanan</b> buat lanjut. Tombolnya juga ada kok.</p><p><b>Plot twist</b> kalau ada yang punya cerita kebalikannya. Skip nggak perlu kasih alasan.</p>` },
+  { t: "5. Bikin, kasih reaksi, share", art: () => `<div style="display:grid;gap:8px;justify-items:center"><p class="mini-q">✍️ Mantan siapa yang paling susah dilupain?</p><div class="mini-btns"><span>🔥 Seru</span><span>📸 Share</span></div></div>`,
+    b: `<p>Tulis <b>pertanyaan bikinan sendiri</b> di bagian 3, terus kirim pack-nya ke tongkrongan lain lewat link.</p><p>Tiap kartu bisa dikasih 🔥😳😂 dan di-<b>share jadi gambar</b> buat story. Di akhir ada <b>awards</b> buat tiap orang.</p>` },
 ];
 function vTut() {
   const i = ui.tut, s = TUT[i], last = i === TUT.length - 1;
@@ -779,8 +874,7 @@ function vRules() {
 
 function vNums() {
   const avail = new Set(S.order.flatMap(id => S.pools[id] || []));
-  const show = [];
-  for (let n = 1; n <= MAX_NO; n++) if (ALL[n].r !== "bn" || S.order.includes("bn")) show.push(n);
+  const show = Object.values(ALL).filter(q => (q.r !== "bn" || S.order.includes("bn")) && (q.r !== "cu" || S.order.includes("cu"))).map(q => q.no);
   return `<div class="sheet" data-a="close"><div class="panel-s" role="dialog" aria-modal="true" aria-labelledby="nt">
     <h2 id="nt">Pilih nomor</h2>
     <p class="muted">${esc(S.players[S.asker].n)} pilih nomor buat ${esc(S.players[S.answerer].n)}. Nomor yang dicoret udah kepake atau nggak ada di ronde yang dimainin.</p>
@@ -795,9 +889,9 @@ function render(anim = false) {
   const views = { setup: vSetup, pick: vPick, card: vCard, between: vBetween, end: vEnd };
   if (!views[S.phase] || (S.phase === "card" && !S.q)) S.phase = S.players ? "pick" : "setup";
   const app = $("#app");
-  const sheet = ui.tut != null ? "tut" : ui.rules ? "rules" : ui.nums ? "nums" : "";
+  const sheet = ui.imp ? "imp" : ui.tut != null ? "tut" : ui.rules ? "rules" : ui.nums ? "nums" : "";
   app.classList.toggle("wide", S.phase === "setup");
-  app.innerHTML = views[S.phase]() + (ui.tut != null ? vTut() : "") + (ui.rules ? vRules() : "") + (ui.nums ? vNums() : "");
+  app.innerHTML = views[S.phase]() + (ui.tut != null ? vTut() : "") + (ui.rules ? vRules() : "") + (ui.nums ? vNums() : "") + (ui.imp ? vImport() : "");
   const phaseChanged = S.phase !== lastPhase || anim;
   if (phaseChanged) enter(S.phase);
   if (sheet && sheet !== lastSheet) sheetIn();
@@ -917,6 +1011,141 @@ function spin() {
   tick();
 }
 
+// ---------- growth features ----------
+const REACTS = [["fire", "🔥", "Seru"], ["wow", "😳", "Deg"], ["lol", "😂", "Ngakak"]];
+const SITE = (location.host + location.pathname).replace(/index\.html$/, "").replace(/\/$/, "") || "chronomark29.github.io/rolling-topik-mobil";
+const todayLabel = () => new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long" });
+// Same question for everyone on the same local day: a shared daily ritual.
+function daily() {
+  const pool = Object.values(ALL).filter(q => q.no <= MAX_NO && LVL[q.r] >= 2);
+  const day = Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 86400000);
+  return pool[(day * 7919) % pool.length];
+}
+function awards() {
+  const ps = S.players || [], out = [];
+  const top = k => { const p = [...ps].sort((a, b) => (b[k] || 0) - (a[k] || 0))[0]; return p && p[k] ? p : null; };
+  const c = top("c"), sk = top("sk"), tw = top("tw");
+  if (c) out.push({ e: "🎤", t: "Paling sering kena", who: c.n, d: `${c.c}x jawab` });
+  if (sk) out.push({ e: "🙈", t: "Raja skip", who: sk.n, d: `${sk.sk}x skip` });
+  if (tw) out.push({ e: "🔄", t: "Magnet plot twist", who: tw.n, d: `${tw.tw}x plot twist` });
+  const best = Object.entries(S.votes || {}).map(([no, v]) => [no, (v.fire || 0) * 2 + (v.wow || 0) + (v.lol || 0)]).sort((a, b) => b[1] - a[1])[0];
+  if (best && best[1] > 0 && ALL[best[0]]) out.push({ e: "🔥", t: `Pertanyaan paling seru · #${best[0]}`, who: ALL[best[0]].text, d: "Paling banyak reaksi", best: true });
+  return out;
+}
+function floatEmoji(el, emo) {
+  if (!M() || !el) return;
+  const r = el.getBoundingClientRect();
+  for (let k = 0; k < 4; k++) {
+    const f = document.createElement("div");
+    f.className = "fx-emo"; f.textContent = emo;
+    f.style.left = r.left + r.width / 2 + "px"; f.style.top = r.top + "px";
+    document.body.appendChild(f);
+    G.fromTo(f, { scale: .4, y: 0, x: 0 }, { scale: 1.4, y: -120 - k * 30, x: (k - 1.5) * 26, opacity: 0, duration: .9 + k * .1, ease: "power2.out", onComplete: () => f.remove() });
+  }
+}
+
+// Share links: Web Share sheet on phones, clipboard elsewhere.
+async function shareLink(url, text) {
+  if (navigator.share) { try { await navigator.share({ title: "Rolling Topik Mobil", text, url }); return; } catch (e) { if (e.name === "AbortError") return; } }
+  try { await navigator.clipboard.writeText(url); toast("Link udah ke-copy, tinggal paste ke grup"); }
+  catch { toast("Gagal copy. Salin link dari address bar ya"); }
+}
+function packUrl() {
+  const bytes = new TextEncoder().encode(JSON.stringify(CUSTOM));
+  let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b));
+  return location.origin + location.pathname + "#pack=" + btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+// Pack links are untrusted input: only strings, trimmed, capped, de-duplicated, always rendered escaped.
+function readPack() {
+  const m = location.hash.match(/^#pack=([A-Za-z0-9_-]+)$/);
+  if (!m) return null;
+  try {
+    const bin = atob(m[1].replace(/-/g, "+").replace(/_/g, "/"));
+    const data = JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0))));
+    const qs = (Array.isArray(data) ? data : []).filter(x => typeof x === "string").map(x => x.trim().slice(0, 140)).filter(Boolean);
+    return qs.length ? [...new Set(qs)].slice(0, 50) : null;
+  } catch { return null; }
+}
+function vImport() {
+  const list = ui.imp;
+  return `<div class="sheet"><div class="panel-s" role="dialog" aria-modal="true" aria-labelledby="it">
+    <h2 id="it">Ada pack dari temen 🎁</h2>
+    <p class="muted">${list.length} pertanyaan bikinan tongkrongan lain. Mau ditambahin ke ronde “Bikinan Tongkrongan”?</p>
+    <ul class="cq">${list.slice(0, 5).map(q => `<li><span>${esc(q)}</span></li>`).join("")}</ul>
+    ${list.length > 5 ? `<p class="hint">+${list.length - 5} pertanyaan lainnya</p>` : ""}
+    <div class="bar"><button class="btn ghost" data-a="impNo">Nggak dulu</button><button class="btn primary" data-a="impYes">Tambahin ${I.arrow}</button></div>
+  </div></div>`;
+}
+
+// Story-sized share image (1080x1350) drawn on canvas.
+function wrapText(x, text, maxW) {
+  const words = text.split(" "), lines = [];
+  let line = "";
+  for (const w of words) { const t = line ? line + " " + w : w; if (x.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; }
+  if (line) lines.push(line);
+  return lines;
+}
+function rrect(x, X, Y, W, H, R) { x.beginPath(); x.moveTo(X + R, Y); x.arcTo(X + W, Y, X + W, Y + H, R); x.arcTo(X + W, Y + H, X, Y + H, R); x.arcTo(X, Y + H, X, Y, R); x.arcTo(X, Y, X + W, Y, R); x.closePath(); }
+async function shareImage(kind) {
+  toast("Lagi bikin gambar…");
+  try { await Promise.all(["italic 900 90px Poppins", "700 56px Poppins", "600 30px Poppins", "700 46px Caveat"].map(f => document.fonts.load(f))); } catch {}
+  const c = document.createElement("canvas"); c.width = 1080; c.height = 1350;
+  const x = c.getContext("2d");
+  x.fillStyle = "#F6F8FF"; x.fillRect(0, 0, 1080, 1350);
+  for (const [cx, cy, r, col] of [[60, 40, 340, "#F9C94C"], [1060, 110, 380, "#C9C2FF"], [1000, 1340, 380, "#D9D0FF"], [30, 1330, 300, "#EADFFF"]]) {
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, col); g.addColorStop(.6, col); g.addColorStop(1, col + "00");
+    x.fillStyle = g; x.beginPath(); x.arc(cx, cy, r, 0, 7); x.fill();
+  }
+  x.save(); x.translate(100, 200); x.rotate(-.07);
+  x.fillStyle = "#F9C94C"; rrect(x, 70, 50, 600, 64, 32); x.fill();
+  x.font = "italic 900 96px Poppins"; x.fillStyle = "#1F1F38"; x.fillText("Rolling", 0, 0);
+  x.fillStyle = "#6C63FF"; x.fillText("Topik Mobil", 40, 100); x.restore();
+  let tag, body, hand;
+  if (kind === "q") { const q = ALL[S.q]; tag = `#${q.no} · ${BY_ROUND[q.r].name}`; body = q.text; hand = "Berani jawab jujur? 👀"; }
+  else if (kind === "daily") { tag = `🌙 Pertanyaan malam ini · ${todayLabel()}`; body = daily().text; hand = "Tag temen yang harus jawab ini!"; }
+  else { tag = "Hasil perjalanan malam ini"; body = null; hand = `${S.used.length} pertanyaan kejawab. Kalian berani?`; }
+  x.fillStyle = "#fff"; rrect(x, 70, 380, 940, 740, 48); x.fill();
+  x.lineWidth = 6; x.strokeStyle = "#1F1F38"; x.stroke();
+  x.fillStyle = "#6C63FF"; x.font = "700 32px Poppins"; x.fillText(tag.toUpperCase().slice(0, 48), 130, 470);
+  x.fillStyle = "#1F1F38";
+  if (body) {
+    let size = 60, lines;
+    do { x.font = `700 ${size}px Poppins`; lines = wrapText(x, body, 820); size -= 4; } while (lines.length * size * 1.3 > 560 && size > 34);
+    const lh = (size + 4) * 1.3;
+    lines.forEach((l, k) => x.fillText(l, 130, 570 + k * lh));
+  } else {
+    x.font = "700 44px Poppins";
+    awards().slice(0, 4).forEach((a, k) => {
+      const line = a.best ? `${a.e} Paling seru: “${a.who}”` : `${a.e} ${a.t}: ${a.who} (${a.d})`;
+      wrapText(x, line, 820).slice(0, 2).forEach((l, j) => x.fillText(l, 130, 580 + k * 130 + j * 56));
+    });
+    if (!awards().length) x.fillText("🎉 Semua udah pada spill!", 130, 600);
+  }
+  x.fillStyle = "#6C63FF"; x.font = "700 52px Caveat"; x.textAlign = "center"; x.fillText(hand, 540, 1200);
+  x.fillStyle = "#6C63FF"; rrect(x, 140, 1235, 800, 76, 38); x.fill();
+  x.fillStyle = "#fff"; x.font = "600 30px Poppins"; x.fillText(`Main gratis: ${SITE}`, 540, 1284);
+  const blob = await new Promise(r => c.toBlob(r, "image/png"));
+  if (!blob) return toast("Gagal bikin gambar");
+  const file = new File([blob], "rolling-topik-mobil.png", { type: "image/png" });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: "Rolling Topik Mobil", text: `Main gratis: https://${SITE}` }); } catch {}
+    return;
+  }
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "rolling-topik-mobil.png";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  toast("Gambar ke-download, siap upload ke story");
+}
+
+// Installable app (PWA)
+let installEvt = null;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const canInstall = () => !standalone && (installEvt || isIOS);
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if (S.phase === "setup") render(); });
+if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+
 // ---------- loader ----------
 function loader(done) {
   const el = document.createElement("div");
@@ -975,7 +1204,7 @@ document.addEventListener("click", e => {
     },
     focus: () => { $("#nm").focus(); return true; },
     preset: () => {
-      const p = PRESETS[t.dataset.k]; S.preset = t.dataset.k; S.rounds = [...p.rounds]; S.mix = p.mix; render();
+      const p = PRESETS[t.dataset.k]; S.preset = t.dataset.k; S.rounds = [...p.rounds()]; S.mix = p.mix; render();
       const el = $(`.preset[data-k="${t.dataset.k}"]`);
       if (M()) { G.fromTo(el, { scale: .9 }, { scale: 1, duration: .5, ease: "elastic.out(1, .4)", clearProps: "transform" }); G.from(el.querySelector(".ck"), { scale: 0, rotation: -120, duration: .4, ease: "back.out(3)" }); G.from(el.querySelector(".emo"), { y: -14, rotation: -20, duration: .5, ease: "bounce.out" }); }
       return true;
@@ -999,7 +1228,9 @@ document.addEventListener("click", e => {
       return true;
     },
     twist: () => {
-      ui.twist = !ui.twist; render();
+      ui.twist = !ui.twist;
+      if (ui.twist && S.answerer != null) S.players[S.answerer].tw = (S.players[S.answerer].tw || 0) + 1;
+      render();
       if (ui.twist && M()) {
         G.fromTo("#qcard", { x: -10 }, { x: 0, duration: .6, ease: "elastic.out(1.2, .25)", clearProps: "transform" });
         G.from("#sticker", { scale: 3, rotation: -40, opacity: 0, duration: .45, ease: "back.out(1.6)" });
@@ -1009,6 +1240,41 @@ document.addEventListener("click", e => {
       return true;
     },
     rules: () => { ui.rules = true; },
+    react: () => {
+      const k = t.dataset.k, v = (S.votes ||= {})[S.q] ||= {};
+      v[k] = (v[k] || 0) + 1; render();
+      const el = $(`.react[data-k="${k}"]`);
+      if (M()) G.fromTo(el, { scale: .8 }, { scale: 1, duration: .5, ease: "elastic.out(1, .4)", clearProps: "transform" });
+      floatEmoji(el, REACTS.find(r => r[0] === k)[1]);
+      return true;
+    },
+    shareQ: () => { shareImage("q"); return true; },
+    shareDaily: () => { shareImage("daily"); return true; },
+    shareEnd: () => { shareImage("end"); return true; },
+    sharePack: () => { shareLink(packUrl(), `${CUSTOM.length} pertanyaan bikinan tongkrongan gue. Berani jawab?`); return true; },
+    cdel: () => {
+      const li = t.closest("li"), go = () => {
+        CUSTOM.splice(+t.dataset.i, 1); syncCustom();
+        if (!CUSTOM.length) S.rounds = S.rounds.filter(x => x !== "cu");
+        render();
+      };
+      if (M()) G.to(li, { x: 40, opacity: 0, duration: .22, onComplete: go }); else go();
+      return true;
+    },
+    impYes: () => {
+      let added = 0;
+      for (const q of ui.imp) if (!CUSTOM.includes(q) && CUSTOM.length < 50) { CUSTOM.push(q); added++; }
+      syncCustom(); ui.imp = null;
+      if (CUSTOM.length && !S.rounds.includes("cu")) S.rounds = [...S.rounds, "cu"];
+      render(); toast(added ? `${added} pertanyaan masuk ✓` : "Semua pertanyaannya udah ada");
+      return true;
+    },
+    impNo: () => { ui.imp = null; },
+    install: () => {
+      if (installEvt) { installEvt.prompt(); installEvt = null; render(); }
+      else toast("Tap tombol Share di Safari, terus pilih “Add to Home Screen”");
+      return true;
+    },
     tut0: () => { ui.tut = 0; },
     tutn: () => { ui.tut++; },
     tutp: () => { ui.tut--; },
@@ -1028,6 +1294,7 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("submit", e => {
   e.preventDefault();
+  if (e.target.id === "qf") return addCustom();
   const inp = $("#nm");
   const vs = inp.value.split(",").map(v => v.trim().slice(0, 20)).filter(Boolean);
   if (!vs.length) {
@@ -1045,8 +1312,22 @@ document.addEventListener("submit", e => {
   if (M() && added) G.from($$(".chip[data-chip]").slice(-added), { scale: 0, rotation: -15, duration: .45, stagger: .06, ease: "back.out(2.5)" });
   $("#nm").focus();
 });
-document.addEventListener("keydown", e => { if (e.key === "Escape" && (ui.rules || ui.nums)) { ui.rules = ui.nums = false; render(); } });
+function addCustom() {
+  const box = $("#cqbox"), v = $("#cq").value.trim().replace(/\s+/g, " ").slice(0, 140);
+  const shake = msg => { box.classList.add("err"); if (M()) G.fromTo(box, { x: -8 }, { x: 0, duration: .5, ease: "elastic.out(1.2, .25)" }); setTimeout(() => box.classList.remove("err"), 1200); if (msg) toast(msg); };
+  if (v.length < 8) return shake("Pertanyaannya kependekan");
+  if (CUSTOM.includes(v)) return shake("Pertanyaan itu udah ada");
+  if (CUSTOM.length >= 50) return shake("Maksimal 50 pertanyaan");
+  CUSTOM.push(v); syncCustom();
+  if (!S.rounds.includes("cu")) S.rounds = [...S.rounds, "cu"];
+  render();
+  if (M()) G.from(".cq li:last-child", { y: 14, scale: .9, opacity: 0, duration: .45, ease: "back.out(2)" });
+  $("#cq").focus();
+}
+document.addEventListener("keydown", e => { if (e.key === "Escape" && (ui.rules || ui.nums || ui.imp)) { ui.rules = ui.nums = false; ui.imp = null; render(); } });
 
+ui.imp = readPack();
+if (location.hash.startsWith("#pack=")) history.replaceState(null, "", location.pathname + location.search);
 loader(() => { render(); wake(); });
 </script>
 </body>
