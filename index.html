@@ -454,21 +454,21 @@ const ROUNDS = [
     "Kalau kamu bertemu dirimu sendiri dalam versi pasanganmu, kamu bakal merasa beruntung atau malah capek?",
     "Menurutmu, kamu sebenarnya sudah siap dicintai dengan sehat, atau masih tertarik sama cinta yang bikin kamu harus berjuang terus?",
     "Kalau hubungan terakhirmu meninggalkan satu pelajaran yang belum benar-benar kamu praktikkan sampai sekarang, apa itu?" ] },
-  { id: "jb", name: "Jebakan Batman", sub: "Jawab apa pun, tetap ketahuan", fresh: true, qs: [
+  { id: "jb", name: "Jebakan Batman", sub: "Jawab apa pun, tetap ketahuan", qs: [
     "Malam ini kamu tiba-tiba putus. Sebut satu nama yang bakal kamu chat duluan. Nggak boleh jawab “nggak ada”.",
     "Dari semua orang yang pernah kamu suka, siapa yang paling nggak pantas kamu sukai? Terus kenapa kamu tetap suka?",
     "Akun siapa yang pernah kamu stalking paling lama? Sampai scroll ke tahun berapa?",
     "HP-mu dikasih ke orang di sebelahmu sekarang juga. Aplikasi atau chat siapa yang paling kamu takutin dia buka?",
     "Pernah pura-pura belum baca chat seseorang padahal udah baca dari notif? Chat siapa, dan kenapa?",
     "Siapa orang yang kamu bilang “cuma temen”, padahal kamu sendiri tahu itu bohong?" ] },
-  { id: "dl", name: "Dilema Susah", sub: "Wajib pilih satu, wajib kasih alasan", fresh: true, qs: [
+  { id: "dl", name: "Dilema Susah", sub: "Wajib pilih satu, wajib kasih alasan", qs: [
     "Balikan sama mantan terbaikmu, atau mulai dari nol sama orang baru yang belum pasti?",
     "Pasangan yang cakep banget tapi cuek, atau yang biasa aja tapi selalu ada buat kamu?",
     "Tahu semua isi chat pasanganmu sama mantannya, atau nggak tahu sama sekali selamanya?",
     "Kamu dicintai banget tapi cuma suka setengah, atau kamu cinta banget tapi dia cuma suka setengah?",
     "Ditinggal tanpa penjelasan sama sekali, atau dijelasin semuanya dengan jujur tapi nyakitin banget?",
     "LDR sama orang yang tepat, atau deket tiap hari sama orang yang “lumayan”?" ] },
-  { id: "tk", name: "Spill Tongkrongan", sub: "Soal orang-orang yang ada di mobil ini", fresh: true, qs: [
+  { id: "tk", name: "Spill Tongkrongan", sub: "Soal orang-orang yang ada di mobil ini", qs: [
     "Siapa di mobil ini yang paling gampang bucin? Kasih satu bukti.",
     "Kalau harus jodohin satu orang di mobil ini sama orang yang kamu kenal, siapa sama siapa? Kenapa cocok?",
     "Siapa di sini yang menurutmu paling sering bohong soal perasaannya sendiri?",
@@ -483,9 +483,9 @@ const BONUS = { id: "bn", name: "Cadangan 🔥", sub: "Level “anjir, kok perta
   "Kamu ingin seseorang mencintaimu apa adanya, tapi bagian mana dari dirimu yang sebenarnya belum berani kamu tunjukkan?",
   "Kalau ternyata kamu bukan orang yang paling terluka dalam kisah cintamu yang paling membekas, apa yang harus kamu akui tentang dirimu sendiri?" ] };
 
-// Safe rounds for family, office or strangers (asked for by the "mode aman" critique). Numbered 54–73.
+// Extra rounds, numbered 54–99: safe rounds (54–73), then rounds built on 2024–2026 dating trends (74–99).
 const EXTRA = [
-  { id: "sn", name: "Santai Dulu", sub: "Pemanasan aman, cocok buat siapa aja", fresh: true, qs: [
+  { id: "sn", name: "Santai Dulu", sub: "Pemanasan aman, cocok buat siapa aja", qs: [
     "Lagu apa yang langsung bikin kamu inget satu orang tertentu?",
     "Film romantis apa yang menurutmu paling overrated, dan kenapa?",
     "Kalau tongkrongan ini jadi grup band, kamu pegang posisi apa?",
@@ -494,36 +494,64 @@ const EXTRA = [
     "Chat paling random yang pernah bikin kamu senyum sendiri?",
     "Kalau perjalanan ini punya judul playlist, judulnya apa?",
     "Red flag paling kecil apa yang tetap bikin kamu ilfeel?" ] },
-  { id: "pk", name: "PDKT Mode", sub: "Buat yang lagi deket tapi belum jadian", fresh: true, qs: [
+  { id: "pk", name: "PDKT Mode", sub: "Buat yang lagi deket tapi belum jadian", qs: [
     "Kode paling halus yang pernah kamu kasih ke gebetan. Dia nangkep nggak?",
     "Mending nembak duluan terus ditolak, atau nunggu dan nggak pernah tahu?",
     "Berapa lama balas chat yang menurutmu masih wajar pas PDKT?",
     "Gebetanmu ternyata temen deket mantanmu. Lanjut atau mundur?",
     "Hal apa yang biasanya bikin kamu ilfeel di minggu pertama PDKT?",
     "Pernah salah paham ngira seseorang suka sama kamu? Ceritain." ] },
-  { id: "kl", name: "Edisi Keluarga & Mudik", sub: "Aman dimainin bareng om, tante, dan sepupu", fresh: true, qs: [
+  { id: "kl", name: "Edisi Keluarga & Mudik", sub: "Aman dimainin bareng om, tante, dan sepupu", qs: [
     "Pertanyaan paling nyebelin dari keluarga pas kumpul, dan jawaban andalanmu?",
     "Kisah cinta siapa di keluargamu yang paling pengen kamu tiru?",
     "Nasihat cinta dari orang tua yang dulu kamu ketawain, tapi sekarang kamu setujui?",
     "Kalau pacarmu ketemu keluarga besarmu, siapa yang paling kamu khawatirin?",
     "Tradisi keluarga apa yang pengen kamu terusin nanti?",
     "Lagu wajib di mobil keluargamu waktu kecil apa?" ] },
+  { id: "fy", name: "Lagi Rame di FYP", sub: "Istilah cinta yang lagi seliweran di timeline", fresh: true, qs: [
+    "Pernah ada di situationship? Siapa yang akhirnya nanya “kita ini apa?”, dan jawabannya apa?",
+    "Pernah nge-ghosting orang? Kalau dia duduk di mobil ini, alasan apa yang bakal kamu kasih?",
+    "Siapa yang masih suka ngasih kamu remah-remah perhatian: like story, balas sesekali, tapi nggak pernah ngajak serius?",
+    "Pernah di-love bombing? Kapan kamu sadar perhatian berlebihnya itu ternyata red flag?",
+    "Kalau soft launch pacar di story, bagian apa yang kamu kasih liat duluan: tangan, punggung, atau cuma bayangan?",
+    "Perhatian kecil apa yang buatmu lebih romantis dari bunga atau surprise mahal?",
+    "Selera aneh apa dari dirimu yang pengen banget pasanganmu juga punya?",
+    "Pacaran santai tanpa buru-buru kasih status: dewasa banget, atau cuma takut komitmen?",
+    "Jujur: pernah deketin seseorang karena dia keren atau terkenal, bukan karena beneran suka?",
+    "Pernah chatting sama beberapa gebetan sekaligus? Paling banyak berapa orang, dan ada yang tahu?",
+    "Momen paling delulu kamu soal cinta: yakin dia suka, ternyata nggak sama sekali?",
+    "Apa beige flag kamu, kebiasaan aneh tapi nggak bahaya, yang bikin pasangan bingung?",
+    "Konten “marriage is scary” bikin kamu makin takut nikah, atau makin selektif milih pasangan?",
+    "Pernah screenshot chat gebetan terus kirim ke grup buat minta pendapat? Apa kata grupnya?",
+    "Kalau boleh nanya satu hal yang nggak bisa ditawar di kencan pertama, kamu bakal nanya apa?",
+    "Patah hati apa yang menurutmu udah jadi canon event hidupmu, wajib kejadian biar kamu dewasa?" ] },
+  { id: "ht", name: "Hot Take Tongkrongan", sub: "Setuju atau nggak? Wajib bela pendapatmu", fresh: true, qs: [
+    "Hot take: cek HP pasangan itu wajar asal dua-duanya setuju. Setuju nggak?",
+    "Hot take: masih masuk close friends story mantan itu tanda dia belum move on.",
+    "Hot take: balas chat lama itu bukan karena sibuk, tapi karena kamu bukan prioritas.",
+    "Hot take: kenalan lewat aplikasi kencan sama aja kayak kenalan di tongkrongan.",
+    "Hot take: yang ngajak kencan pertama, dia yang wajib bayarin.",
+    "Hot take: temen lawan jenis yang terlalu deket itu ancaman, bukan sekadar temen.",
+    "Hot take: pasangan nggak wajib di-post di medsos biar hubungannya dianggap serius.",
+    "Hot take: balikan sama mantan itu kayak baca ulang buku yang endingnya udah kamu tahu.",
+    "Hot take: nikah itu soal finansial dulu, cinta belakangan.",
+    "Hot take: stalking akun mantan itu normal, semua orang pernah." ] },
 ];
-const LVL = { sn: 1, kl: 1, r1: 2, r3: 2, r4: 2, pk: 2, dl: 2, cu: 2, r2: 3, r5: 3, jb: 3, tk: 3, r6: 3, bn: 3 };
+const LVL = { sn: 1, kl: 1, ht: 2, fy: 3, r1: 2, r3: 2, r4: 2, pk: 2, dl: 2, cu: 2, r2: 3, r5: 3, jb: 3, tk: 3, r6: 3, bn: 3 };
 const LVL_TAG = { 1: "🌱 Santai", 2: "🔥 Deep", 3: "🌶️ Pedas" };
 
 // Play order is not number order: light rounds open, the final round goes last.
-const BASE_ORDER = ["sn", "kl", "r1", "pk", "r2", "r3", "r4", "r5", "jb", "dl", "tk", "r6"];
+const BASE_ORDER = ["sn", "kl", "ht", "r1", "pk", "r2", "fy", "r3", "r4", "r5", "jb", "dl", "tk", "r6"];
 let PLAY_ORDER = BASE_ORDER;
 const withCu = ids => CUSTOM.length ? [...ids, "cu"] : ids;
 const PRESETS = {
-  santai: { label: "Mode santai", hint: "Aman buat keluarga & kantor", rounds: () => withCu(["sn", "kl", "pk"]), mix: false },
-  aman: { label: "Alur deep", hint: "Pemanasan, brutal, final", rounds: () => withCu(["r1", "r2", "r6"]), mix: false },
+  santai: { label: "Mode santai", hint: "Aman buat keluarga & kantor", rounds: () => withCu(["sn", "kl", "ht", "pk"]), mix: false },
+  aman: { label: "Alur deep", hint: "Pemanasan, FYP, final", rounds: () => withCu(["r1", "fy", "r2", "r6"]), mix: false },
   full: { label: "Full semua", hint: "Semua ronde urut", rounds: () => PLAY_ORDER, mix: false },
   acak: { label: "Acak bebas", hint: "Semua dikocok", rounds: () => PLAY_ORDER, mix: true },
 };
 
-// Flat numbered list: 1..73, custom questions from 101
+// Flat numbered list: 1..99, custom questions from 101
 const ALL = {};
 const BY_ROUND = {};
 let no = 0;

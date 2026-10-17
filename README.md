@@ -6,7 +6,7 @@ Main: https://chronomark29.github.io/rolling-topik-mobil/
 
 ## Fitur
 - 4 gaya main: Mode santai (aman buat keluarga & kantor), Alur deep, Full semua, Acak bebas.
-- 13 ronde, 73 pertanyaan, level 🌱 Santai / 🔥 Deep / 🌶️ Pedas.
+- 15 ronde, 99 pertanyaan (termasuk ronde "Lagi Rame di FYP" dan "Hot Take Tongkrongan"), level 🌱 Santai / 🔥 Deep / 🌶️ Pedas.
 - Penanya pilih penjawab (tap atau acak), kartu bisa di-swipe.
 - Pertanyaan bikinan sendiri + kirim pack ke tongkrongan lain lewat link.
 - Reaksi 🔥😳😂 per kartu, awards di akhir, share kartu & hasil jadi gambar story.
