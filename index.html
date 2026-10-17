@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f3fa">
+<title>Rolling Topik Mobil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one-screen app. Dark car-stereo LCD strip on top, one big question card, thumb buttons pinned at the bottom.
+   Light look: cool paper background, electric violet accent, road-sign yellow for the main action. */
+:root {
+  --bg: #f4f3fa;
+  --surface: #ffffff;
+  --surface-2: #ecebf6;
+  --line: #dcdaeb;
+  --fg: #16142c;
+  --muted: #64627f;
+  --lamp: #5b3df5;
+  --lamp-dim: #5b3df512;
+  --sun: #ffd23f;
+  --sun-edge: #e2b200;
+  --sun-ink: #2a2100;
+  --hot: #e2335d;
+  --hot-dim: #e2335d10;
+  --lcd-bg: #16142c;
+  --lcd-fg: #ffd23f;
+  --f-display: "Dela Gothic One", "Arial Black", Impact, sans-serif;
+  --f-body: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-lcd: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.app {
+  max-width: 560px; height: 100%; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column;
+}
+@media (min-width: 720px) { .app { max-width: 640px; padding-top: 32px; padding-bottom: 32px; } }
+.screen { display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; overflow-y: auto; }
+.scroll { overflow-y: auto; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 20px; padding: 2px 2px 8px; }
+
+h1 { font-family: var(--f-display); font-weight: 400; font-size: clamp(2.3rem, 11.5vw, 3.4rem); line-height: .98; margin: 0; text-wrap: balance; }
+h1 span { color: var(--lamp); }
+h2 { font-family: var(--f-display); font-weight: 400; font-size: 1.5rem; line-height: 1.15; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+.label { font-family: var(--f-lcd); font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+/* car stereo LCD */
+.lcd {
+  font-family: var(--f-lcd); font-weight: 700; font-size: .8rem; letter-spacing: .08em;
+  color: var(--lcd-fg); background: var(--lcd-bg); border-radius: 12px;
+  padding: 6px 6px 6px 12px; display: flex; justify-content: space-between; gap: 8px; align-items: center;
+  white-space: nowrap; flex: none; font-variant-numeric: tabular-nums; text-transform: uppercase;
+}
+.lcd .sep { opacity: .4; }
+.lcd > span:first-child { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.lcd > span:last-child { display: flex; gap: 6px; }
+.lcd button { all: unset; cursor: pointer; color: #ffffffcc; font-size: .9rem; width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid #ffffff2e; border-radius: 8px; }
+.lcd button:focus-visible { outline: 2px solid var(--lcd-fg); }
+
+/* buttons */
+button { font: inherit; color: inherit; }
+.btn {
+  border: 1px solid var(--line); cursor: pointer; border-radius: 16px; padding: 14px 18px;
+  font-weight: 800; font-size: 1rem; background: var(--surface); color: var(--fg);
+  min-height: 54px; box-shadow: 0 2px 0 var(--line); transition: transform .1s ease, box-shadow .1s ease;
+}
+.btn:active { transform: translateY(2px); box-shadow: 0 0 0 var(--line); }
+.btn:focus-visible, .chip:focus-visible, .who:focus-visible, .num:focus-visible, .preset:focus-visible, .toggle:focus-visible { outline: 3px solid var(--lamp); outline-offset: 2px; }
+.btn.go { background: var(--sun); color: var(--sun-ink); border-color: var(--sun-edge); box-shadow: 0 4px 0 var(--sun-edge); font-family: var(--f-display); font-weight: 400; font-size: 1.2rem; }
+.btn.go:active { box-shadow: 0 1px 0 var(--sun-edge); transform: translateY(3px); }
+.btn.alt { background: var(--lamp-dim); color: var(--lamp); border-color: #5b3df540; box-shadow: none; }
+.btn.ghost { background: transparent; color: var(--muted); box-shadow: none; }
+.btn[disabled] { opacity: .4; cursor: not-allowed; transform: none; }
+.row { display: flex; gap: 10px; flex: none; }
+.row > * { flex: 1; }
+.row > .btn.go { flex: 1.6; }
+
+/* setup */
+.hero { display: flex; flex-direction: column; gap: 10px; }
+.names { display: flex; flex-wrap: wrap; gap: 8px; }
+.name-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 5px 5px 5px 14px; font-weight: 700; }
+.name-chip button { border: 0; background: var(--surface-2); color: var(--muted); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; line-height: 1; font-size: 1rem; }
+.add { display: flex; gap: 8px; }
+.add input { flex: 1; min-width: 0; font: inherit; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 13px 14px; }
+.add input:focus { outline: 2px solid var(--lamp); border-color: transparent; }
+.add .btn { min-height: 0; padding: 0 18px; box-shadow: none; }
+.section { display: flex; flex-direction: column; gap: 10px; }
+.presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+@media (max-width: 359px) { .presets { grid-template-columns: 1fr; } }
+.preset { border: 1.5px solid var(--line); background: var(--surface); border-radius: 14px; padding: 12px 10px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 2px; }
+.preset b { font-size: .92rem; }
+.preset small { color: var(--muted); font-size: .74rem; line-height: 1.3; }
+.preset[aria-pressed="true"] { border-color: var(--lamp); background: var(--lamp-dim); }
+.preset[aria-pressed="true"] b { color: var(--lamp); }
+.toggle { all: unset; cursor: pointer; font-weight: 700; font-size: .9rem; color: var(--lamp); padding: 4px 0; }
+.rounds { display: grid; grid-template-columns: 1fr; gap: 6px; }
+@media (min-width: 620px) { .rounds { grid-template-columns: 1fr 1fr; } }
+.chip { display: flex; align-items: center; gap: 10px; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 10px 12px; cursor: pointer; min-width: 0; }
+.chip .box { width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--line); flex: none; display: grid; place-items: center; font-size: 13px; color: #fff; }
+.chip[aria-pressed="true"] { border-color: #5b3df555; }
+.chip[aria-pressed="true"] .box { background: var(--lamp); border-color: var(--lamp); }
+.chip[aria-pressed="true"] .box::after { content: "✓"; font-weight: 800; }
+.chip .t { display: flex; flex-direction: column; min-width: 0; }
+.chip .t b { font-size: .9rem; }
+.chip .t small { color: var(--muted); font-size: .76rem; }
+.chip .n { margin-left: auto; font-family: var(--f-lcd); font-size: .7rem; color: var(--muted); flex: none; }
+.chip.new .t b::after { content: "BARU"; font-family: var(--f-lcd); font-size: .6rem; letter-spacing: .1em; color: var(--hot); margin-left: 8px; vertical-align: 2px; }
+
+/* pick */
+.asker { display: flex; flex-direction: column; gap: 4px; }
+.asker h2 { font-size: clamp(2rem, 10vw, 2.8rem); color: var(--lamp); overflow-wrap: anywhere; }
+.whos { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.who { border: 2px solid var(--line); background: var(--surface); border-radius: 16px; padding: 14px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 2px; transition: border-color .1s, background .1s, transform .1s; }
+.who b { font-size: 1.1rem; overflow-wrap: anywhere; }
+.who small { font-family: var(--f-lcd); font-size: .7rem; color: var(--muted); }
+.who.on { border-color: var(--lamp); background: var(--lamp-dim); transform: scale(1.02); }
+.who.on b { color: var(--lamp); }
+.who.flash { border-color: var(--sun-edge); background: #fff6d0; }
+.who[disabled] { opacity: .4; cursor: not-allowed; }
+.who[disabled] small::after { content: " · barusan jawab"; }
+
+/* question card */
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 22px 20px;
+  display: flex; flex-direction: column; gap: 16px; flex: 1 0 auto;
+  box-shadow: 0 14px 34px -18px #16142c40;
+}
+@media (min-width: 720px) { .card { padding: 32px 30px; } }
+.card.hot { border-color: var(--hot); }
+.card.in { animation: deal .45s cubic-bezier(.2,.9,.3,1.2); }
+@keyframes deal { from { opacity: .2; transform: translateY(24px) rotate(-2deg) scale(.96); } to { opacity: 1; transform: none; } }
+.vs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-weight: 800; font-size: .95rem; }
+.vs .a, .vs .b { background: var(--surface-2); border-radius: 999px; padding: 4px 12px; }
+.vs .b { background: var(--lamp); color: #fff; }
+.round-tag { display: flex; flex-direction: column; gap: 2px; }
+.round-tag b { font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--lamp); }
+.card.hot .round-tag b { color: var(--hot); }
+.round-tag small { color: var(--muted); font-size: .82rem; }
+.q { font-size: clamp(1.35rem, 5.6vw, 1.95rem); font-weight: 800; line-height: 1.3; text-wrap: pretty; letter-spacing: -.01em; }
+.nudge { margin-top: auto; border-top: 1px dashed var(--line); padding-top: 14px; color: var(--muted); font-size: .86rem; }
+.nudge em { color: var(--fg); font-style: normal; font-weight: 700; }
+.twist { background: var(--hot); color: #fff; font-weight: 800; border-radius: 14px; padding: 12px 14px; text-align: center; }
+
+/* between / end */
+.big-center { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+.stats { display: flex; flex-direction: column; gap: 6px; }
+.stat { display: flex; justify-content: space-between; gap: 10px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat span:last-child { font-family: var(--f-lcd); color: var(--lamp); }
+
+/* sheets */
+.sheet { position: fixed; inset: 0; z-index: 10; background: #16142c66; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; }
+.sheet > div {
+  background: var(--surface); width: 100%; max-width: 560px; max-height: 88%; overflow-y: auto;
+  border-radius: 24px 24px 0 0;
+  padding: 22px max(18px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px));
+  display: flex; flex-direction: column; gap: 14px;
+}
+@media (min-width: 720px) { .sheet { align-items: center; } .sheet > div { border-radius: 24px; padding: 28px; } }
+.rules { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.rules li { display: flex; flex-direction: column; gap: 2px; }
+.rules b { color: var(--lamp); }
+.nums { display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 6px; }
+.num { border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; height: 46px; cursor: pointer; font-family: var(--f-lcd); font-weight: 700; }
+.num[disabled] { opacity: .25; text-decoration: line-through; cursor: not-allowed; }
+.num.hot { border-color: var(--hot); color: var(--hot); background: var(--hot-dim); }
+.tut > div { gap: 18px; }
+.tut .step { font-family: var(--f-lcd); font-size: .75rem; font-weight: 700; letter-spacing: .12em; color: var(--lamp); }
+.tut h2 { font-size: 1.7rem; }
+.tut .body { font-size: 1.02rem; display: flex; flex-direction: column; gap: 10px; }
+.tut .body b { color: var(--lamp); }
+.demo { background: var(--bg); border: 1px dashed var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; font-size: .9rem; }
+.demo .who, .demo .btn { pointer-events: none; min-height: 0; padding: 10px 12px; }
+.dots { display: flex; gap: 6px; justify-content: center; }
+.dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.dots i.on { background: var(--lamp); width: 22px; border-radius: 4px; }
+.toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: #fff; font-weight: 700; padding: 10px 16px; border-radius: 999px; z-index: 20; font-size: .9rem; max-width: calc(100% - 32px); text-align: center; box-shadow: 0 8px 24px -8px #16142c66; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card.in { animation: none; }
+  .btn, .who { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="app"></div>
+
+<script>
+// Questions 1–30 follow the original list; 31–48 are the new rounds; 49–53 are the 🔥 backup questions.
+const ROUNDS = [
+  { id: "r1", name: "Almost, but never happened", sub: "Buat yang punya kisah belum kelar", qs: [
+    "Siapa orang yang sebenarnya punya peluang besar buat jadi pasanganmu, tapi kalian gagal karena timing, ego, atau keadaan?",
+    "Kalau orang yang pernah kamu suka tiba-tiba duduk di kursi belakang mobil ini, apa hal yang paling kamu takut dia tahu tentang perasaanmu dulu?",
+    "Pernah nggak kamu sengaja bikin seseorang menjauh karena takut dia sadar kamu terlalu sayang?",
+    "Ada nggak seseorang yang kamu bilang sudah biasa aja, padahal kamu cuma berhenti mencari tahu kabarnya?",
+    "Kalau kamu bisa mengulang satu momen sama seseorang tanpa mengubah ending-nya, momen apa yang kamu pilih?" ] },
+  { id: "r2", name: "Brutal honesty soal cinta", sub: "Mulai sini obrolannya makin dalem", qs: [
+    "Kamu lebih takut ditinggalkan setelah dicintai sepenuhnya, atau tidak pernah benar-benar dikenal oleh orang yang mencintaimu?",
+    "Pernah nggak kamu mempertahankan seseorang bukan karena masih cinta, tapi karena nggak rela dia bahagia sama orang lain?",
+    "Kalau pasanganmu memperlakukanmu dengan baik, tapi kamu nggak punya rasa yang kuat ke dia, kamu bakal bertahan atau pergi?",
+    "Apa hal yang kamu kritik dari mantanmu, tapi diam-diam kamu sendiri pernah lakukan ke orang lain?",
+    "Kamu pernah jatuh cinta sama seseorang, atau sebenarnya jatuh cinta sama versi dirimu ketika sedang bersama dia?" ] },
+  { id: "r3", name: "Kalau kita ada di situasi ini…", sub: "Situasional, nggak bisa jawab pakai teori", qs: [
+    "Kamu tahu orang yang kamu suka masih menyimpan foto mantannya. Kamu terganggu karena cemburu, atau karena merasa kamu belum benar-benar dipilih?",
+    "Orang yang dulu menolakmu datang lagi saat kamu sudah bahagia. Kamu penasaran, masih punya rasa, atau cuma ingin membuktikan sesuatu?",
+    "Kamu sudah menemukan orang yang tepat, tapi bertemu dia di fase hidup ketika kamu belum siap mencintai siapa pun. Kamu perjuangkan atau lepaskan?",
+    "Kalau pasanganmu bisa membaca semua chat lama kamu dengan orang yang pernah kamu suka, bagian mana yang paling sulit kamu jelaskan?",
+    "Kamu bisa mengetahui satu hal tentang masa depan hubunganmu sekarang: apakah kalian akan menikah, siapa yang akan pergi duluan, atau apakah salah satu dari kalian pernah selingkuh. Pilih yang mana, dan kenapa?" ] },
+  { id: "r4", name: "Perasaan yang jarang diakui", sub: "Ronde yang bikin mobil mendadak sunyi", qs: [
+    "Apa bentuk perhatian kecil yang sebenarnya kamu tunggu dari seseorang, tapi terlalu gengsi buat memintanya?",
+    "Kamu pernah merasa lebih dicintai saat seseorang mengejarmu daripada saat akhirnya dia berhasil mendapatkanmu?",
+    "Kalau seseorang benar-benar mengenal sisi terburukmu, menurutmu dia bakal makin sayang atau justru kehilangan rasa?",
+    "Apa yang lebih menyakitkan buatmu: orang yang kamu cintai berhenti mencintaimu, atau dia masih mencintaimu tapi memilih orang lain?",
+    "Saat kamu bilang “aku nggak apa-apa” ke orang yang kamu suka, sebenarnya kamu berharap dia melakukan apa?" ] },
+  { id: "r5", name: "Red flag yang nggak hitam putih", sub: "Debat yang bisa berujung saling bongkar", qs: [
+    "Mana yang lebih berbahaya: orang yang tahu dia red flag tapi jujur dari awal, atau orang yang merasa dirinya green flag tapi nggak sadar sering menyakiti?",
+    "Kalau seseorang sangat mencintaimu tapi selalu gagal memahami kebutuhan emosionalmu, apakah cintanya cukup?",
+    "Apakah kamu pernah menyebut seseorang terlalu needy padahal kamu sendiri nggak mampu memberikan kepastian?",
+    "Kalau pasanganmu nggak pernah selingkuh tapi sering membuatmu merasa sendirian dalam hubungan, apakah itu bentuk pengkhianatan?",
+    "Menurutmu, seseorang bisa benar-benar berubah demi cinta, atau dia cuma berubah selama masih takut kehilangan?" ] },
+  { id: "r6", name: "Romantic, tapi agak nyakitin", sub: "Final round. Jawab tanpa bercanda dulu", qs: [
+    "Kalau orang yang paling kamu cintai nggak pernah bisa memberikan hidup yang kamu inginkan, apa kamu tetap memilih dia?",
+    "Kamu lebih ingin menjadi cinta terbesar seseorang, atau orang yang akhirnya dia pilih untuk hidup bersama?",
+    "Kalau kamu bertemu dirimu sendiri dalam versi pasanganmu, kamu bakal merasa beruntung atau malah capek?",
+    "Menurutmu, kamu sebenarnya sudah siap dicintai dengan sehat, atau masih tertarik sama cinta yang bikin kamu harus berjuang terus?",
+    "Kalau hubungan terakhirmu meninggalkan satu pelajaran yang belum benar-benar kamu praktikkan sampai sekarang, apa itu?" ] },
+  { id: "jb", name: "Jebakan Batman", sub: "Jawab apa pun, tetap ketahuan", fresh: true, qs: [
+    "Malam ini kamu tiba-tiba putus. Sebut satu nama yang bakal kamu chat duluan. Nggak boleh jawab “nggak ada”.",
+    "Dari semua orang yang pernah kamu suka, siapa yang paling nggak pantas kamu sukai? Terus kenapa kamu tetap suka?",
+    "Akun siapa yang pernah kamu stalking paling lama? Sampai scroll ke tahun berapa?",
+    "HP-mu dikasih ke orang di sebelahmu sekarang juga. Aplikasi atau chat siapa yang paling kamu takutin dia buka?",
+    "Pernah pura-pura belum baca chat seseorang padahal udah baca dari notif? Chat siapa, dan kenapa?",
+    "Siapa orang yang kamu bilang “cuma temen”, padahal kamu sendiri tahu itu bohong?" ] },
+  { id: "dl", name: "Dilema Susah", sub: "Wajib pilih satu, wajib kasih alasan", fresh: true, qs: [
+    "Balikan sama mantan terbaikmu, atau mulai dari nol sama orang baru yang belum pasti?",
+    "Pasangan yang cakep banget tapi cuek, atau yang biasa aja tapi selalu ada buat kamu?",
+    "Tahu semua isi chat pasanganmu sama mantannya, atau nggak tahu sama sekali selamanya?",
+    "Kamu dicintai banget tapi cuma suka setengah, atau kamu cinta banget tapi dia cuma suka setengah?",
+    "Ditinggal tanpa penjelasan sama sekali, atau dijelasin semuanya dengan jujur tapi nyakitin banget?",
+    "LDR sama orang yang tepat, atau deket tiap hari sama orang yang “lumayan”?" ] },
+  { id: "tk", name: "Spill Tongkrongan", sub: "Soal orang-orang yang ada di mobil ini", fresh: true, qs: [
+    "Siapa di mobil ini yang paling gampang bucin? Kasih satu bukti.",
+    "Kalau harus jodohin satu orang di mobil ini sama orang yang kamu kenal, siapa sama siapa? Kenapa cocok?",
+    "Siapa di sini yang menurutmu paling sering bohong soal perasaannya sendiri?",
+    "Siapa di sini yang paling kamu percaya buat nyimpen rahasia cintamu? Dan siapa yang paling nggak?",
+    "Siapa di mobil ini yang red flag-nya paling kelihatan, tapi tetap laku?",
+    "Pernah nggak kamu cemburu sama salah satu orang di mobil ini, walau cuma dikit? Soal apa?" ] },
+];
+const BONUS = { id: "bn", name: "Cadangan 🔥", sub: "Level “anjir, kok pertanyaannya gitu?”", hot: true, qs: [
+  "Kalau mantanmu menceritakan hubungan kalian dari sudut pandangnya, bagian mana dari dirimu yang mungkin akan terlihat buruk?",
+  "Pernah nggak kamu kehilangan rasa ke seseorang justru setelah dia memberikan semua kepastian yang dulu kamu minta?",
+  "Kalau orang yang kamu suka sekarang bisa melihat bagaimana kamu memperlakukan orang yang menyukaimu dulu, apakah dia masih akan menganggapmu orang yang baik?",
+  "Kamu ingin seseorang mencintaimu apa adanya, tapi bagian mana dari dirimu yang sebenarnya belum berani kamu tunjukkan?",
+  "Kalau ternyata kamu bukan orang yang paling terluka dalam kisah cintamu yang paling membekas, apa yang harus kamu akui tentang dirimu sendiri?" ] };
+
+// Play order is not number order: the final round goes last, the new rounds sit before it.
+const PLAY_ORDER = ["r1", "r2", "r3", "r4", "r5", "jb", "dl", "tk", "r6"];
+const PRESETS = {
+  aman: { label: "Alur aman", hint: "Pemanasan, brutal, final", rounds: ["r1", "r2", "r6"], mix: false },
+  full: { label: "Full semua", hint: "Semua ronde urut", rounds: PLAY_ORDER, mix: false },
+  acak: { label: "Acak bebas", hint: "Semua dikocok", rounds: PLAY_ORDER, mix: true },
+};
+
+// Flat numbered list: 1..53
+const ALL = {};
+const BY_ROUND = {};
+let no = 0;
+for (const r of [...ROUNDS, BONUS]) {
+  BY_ROUND[r.id] = r;
+  r.nos = r.qs.map(text => { no++; ALL[no] = { no, r: r.id, text }; return no; });
+}
+const MAX_NO = no;
+
+const KEY = "rolling-topik-mobil-v1";
+const fresh = () => ({
+  phase: "setup", names: ["Dinda", "Raka", "Sasa"], example: true,
+  preset: "aman", rounds: [...PRESETS.aman.rounds], mix: false,
+});
+let S = load() || fresh();
+const TUT_KEY = "rolling-topik-mobil-tut";
+let ui = { tut: seenTut() ? null : 0, rules: false, nums: false, twist: false, spinning: false, toast: "" };
+
+function seenTut() { try { return localStorage.getItem(TUT_KEY) === "1"; } catch { return false; } }
+function load() { try { const s = JSON.parse(localStorage.getItem(KEY)); return s && s.phase ? s : null; } catch { return null; } }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} }
+const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const buzz = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch {} };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const rnd = n => Math.floor(Math.random() * n);
+
+let lock = null;
+async function wake() { try { if (S.phase !== "setup" && !lock && navigator.wakeLock) { lock = await navigator.wakeLock.request("screen"); lock.addEventListener("release", () => lock = null); } } catch {} }
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") wake(); });
+
+// ---------- game logic ----------
+function start() {
+  const order = PLAY_ORDER.filter(id => S.rounds.includes(id));
+  S.players = S.names.map(n => ({ n, c: 0 }));
+  if (S.mix) { S.order = ["mix"]; S.pools = { mix: order.flatMap(id => BY_ROUND[id].nos) }; }
+  else { S.order = order; S.pools = Object.fromEntries(order.map(id => [id, [...BY_ROUND[id].nos]])); }
+  S.ri = 0; S.asker = 0; S.answerer = null; S.last = null; S.q = null; S.used = []; S.bonusDone = false;
+  S.phase = "between";
+  wake(); render();
+}
+const curPool = () => S.pools[S.order[S.ri]] || [];
+function eligible() {
+  const others = S.players.map((_, i) => i).filter(i => i !== S.asker);
+  const fair = others.filter(i => i !== S.last);
+  return fair.length ? fair : others;
+}
+function markUsed(n) {
+  S.used.push(n);
+  for (const k in S.pools) S.pools[k] = S.pools[k].filter(x => x !== n);
+}
+// Draws from the current round; moves on to the next round if this one ran dry.
+function draw() {
+  while (S.ri < S.order.length && !curPool().length) S.ri++;
+  if (S.ri >= S.order.length) { S.phase = "end"; S.q = null; return false; }
+  const pool = curPool();
+  const n = pool[rnd(pool.length)];
+  markUsed(n); S.q = n; return true;
+}
+function roll() {
+  if (S.answerer == null) return;
+  if (draw()) { S.phase = "card"; ui.twist = false; buzz(25); }
+  render(true);
+}
+function skip() {
+  const before = S.order[S.ri];
+  if (draw()) {
+    ui.twist = false;
+    toast(S.order[S.ri] !== before ? "Ronde ini abis, lanjut ronde berikutnya" : "Skip! Gapapa kok, ini gantinya");
+  }
+  render(true);
+}
+function next() {
+  S.players[S.answerer].c++;
+  S.last = S.answerer; S.answerer = null; S.q = null; ui.twist = false;
+  S.asker = (S.asker + 1) % S.players.length;
+  if (!curPool().length) {
+    S.ri++;
+    while (S.ri < S.order.length && !curPool().length) S.ri++;
+    S.phase = S.ri < S.order.length ? "between" : "end";
+  } else S.phase = "pick";
+  render();
+}
+function pickNumber(n) {
+  if (S.used.includes(n)) return;
+  markUsed(n); S.q = n; S.phase = "card"; ui.nums = false; ui.twist = false; buzz(25); render(true);
+}
+function openBonus() {
+  S.order.push("bn"); S.pools.bn = BONUS.nos.filter(n => !S.used.includes(n)); S.bonusDone = true;
+  S.ri = S.order.length - 1; S.phase = "between"; render();
+}
+function spin() {
+  if (ui.spinning) return;
+  const pool = eligible();
+  const target = pool[rnd(pool.length)];
+  if (reduced() || pool.length === 1) { S.answerer = target; buzz(30); render(); return; }
+  ui.spinning = true; S.answerer = null; render();
+  let step = 0, delay = 60, i = rnd(pool.length);
+  const total = 14 + pool.length * 2;
+  const tick = () => {
+    i = (i + 1) % pool.length;
+    const cur = step >= total ? target : pool[i];
+    document.querySelectorAll(".who").forEach(el => el.classList.toggle("flash", +el.dataset.i === cur));
+    step++;
+    if (step > total) { ui.spinning = false; S.answerer = target; buzz([20, 40, 60]); render(); return; }
+    delay *= 1.12; setTimeout(tick, delay);
+  };
+  tick();
+}
+function toast(msg) { ui.toast = msg; clearTimeout(toast.t); toast.t = setTimeout(() => { ui.toast = ""; render(); }, 2200); }
+
+// ---------- views ----------
+function lcd(extra = "") {
+  const roundNo = S.order[S.ri] === "mix" ? "ACAK" : `R${S.ri + 1}/${S.order.length}`;
+  const left = S.order[S.ri] === "mix" ? `${curPool().length} SISA` : `${(BY_ROUND[S.order[S.ri]]?.nos.length || 0) - curPool().length}/${BY_ROUND[S.order[S.ri]]?.nos.length || 0}`;
+  return `<div class="lcd"><span>${S.q ? `TRK ${String(S.q).padStart(2, "0")} <span class="sep">·</span> ` : ""}${roundNo} <span class="sep">·</span> ${left}</span><span>${extra}<button data-a="rules" aria-label="Aturan main" title="Aturan main">?</button><button data-a="quitx" aria-label="Keluar ke awal" title="Keluar">✕</button></span></div>`;
+}
+
+function vSetup() {
+  const p = PRESETS;
+  const count = PLAY_ORDER.filter(id => S.rounds.includes(id)).reduce((a, id) => a + BY_ROUND[id].qs.length, 0);
+  const ok = S.names.length >= 2 && S.rounds.length > 0;
+  return `<section class="screen">
+    <div class="scroll">
+      <div class="hero">
+        <p class="label">Game tongkrongan di mobil</p>
+        <h1>Rolling <span>Topik</span> Mobil</h1>
+        <p class="muted">Satu nanya, satu jawab, sisanya boleh gali. Jawab jujur, jangan cuma “tergantung”.</p>
+      </div>
+      <div class="section">
+        <p class="label">Siapa aja di mobil? (min. 2)</p>
+        <div class="names">${S.names.map((n, i) => `<span class="name-chip">${esc(n)}<button data-a="del" data-i="${i}" aria-label="Hapus ${esc(n)}">×</button></span>`).join("")}</div>
+        ${S.example ? `<p class="muted small">Ini nama contoh. Hapus terus ganti pake nama kalian.</p>` : ""}
+        <form class="add" id="addf"><input id="nm" maxlength="80" placeholder="Ketik nama, bisa pake koma…" enterkeyhint="done" autocomplete="off" aria-label="Nama pemain"><button class="btn" type="submit">Tambah</button></form>
+      </div>
+      <div class="section">
+        <p class="label">Gaya main</p>
+        <div class="presets">${Object.entries(p).map(([k, v]) => `<button class="preset" data-a="preset" data-k="${k}" aria-pressed="${S.preset === k}"><b>${v.label}</b><small>${v.hint}</small></button>`).join("")}</div>
+        <button class="toggle" data-a="custom" aria-expanded="${!!ui.custom}">${ui.custom ? "Tutup daftar ronde ▴" : "Atur ronde sendiri ▾"} · ${S.rounds.length} ronde, ${count} pertanyaan</button>
+        ${ui.custom ? `<div class="rounds">${PLAY_ORDER.map(id => { const r = BY_ROUND[id]; return `<button class="chip${r.fresh ? " new" : ""}" data-a="round" data-id="${id}" aria-pressed="${S.rounds.includes(id)}"><span class="box"></span><span class="t"><b>${esc(r.name)}</b><small>${esc(r.sub)}</small></span><span class="n">${r.nos[0]}–${r.nos[r.nos.length - 1]}</span></button>`; }).join("")}</div>` : ""}
+        <p class="muted small">Cadangan 🔥 (49–53) kebuka pas semua ronde kelar.</p>
+      </div>
+    </div>
+    <div class="row"><button class="btn ghost" data-a="tut0">Cara main</button><button class="btn go" data-a="start" ${ok ? "" : "disabled"}>Gas mulai</button></div>
+  </section>`;
+}
+
+function vPick() {
+  const el = eligible();
+  const a = S.players[S.asker].n;
+  return `<section class="screen">
+    ${lcd()}
+    <div class="scroll">
+      <div class="asker"><p class="label">🎤 Yang nanya</p><h2>${esc(a)}</h2><p class="muted">${esc(a)}, pilih siapa yang jawab. Atau serahin ke nasib.</p></div>
+      <div class="whos">${S.players.map((p, i) => i === S.asker ? "" :
+        `<button class="who${S.answerer === i ? " on" : ""}" data-a="who" data-i="${i}" ${el.includes(i) && !ui.spinning ? "" : "disabled"}><b>${esc(p.n)}</b><small>udah jawab ${p.c}x</small></button>`).join("")}</div>
+      <button class="btn alt" data-a="spin" ${ui.spinning ? "disabled" : ""}>🎲 Acak aja</button>
+    </div>
+    <div class="row"><button class="btn ghost" data-a="nums" ${S.answerer == null ? "disabled" : ""}>Pilih nomor</button><button class="btn go" data-a="roll" ${S.answerer == null ? "disabled" : ""}>Roll pertanyaan</button></div>
+  </section>`;
+}
+
+function vCard(anim) {
+  const q = ALL[S.q], r = BY_ROUND[q.r];
+  return `<section class="screen">
+    ${lcd()}
+    <article class="card${r.hot ? " hot" : ""}${anim ? " in" : ""}" aria-live="polite">
+      <p class="vs"><span class="a">🎤 ${esc(S.players[S.asker].n)} nanya</span><span aria-hidden="true">→</span><span class="b">${esc(S.players[S.answerer].n)} jawab</span></p>
+      <div class="round-tag"><b>#${q.no} · ${esc(r.name)}</b><small>${esc(r.sub)}</small></div>
+      <p class="q">${esc(q.text)}</p>
+      ${ui.twist ? `<div class="twist">Plot twist! Ada yang punya pengalaman kebalikannya? Spill sekarang 👀</div>` : ""}
+      <p class="nudge">Abis dijawab, satu orang wajib nanya: <em>“Kenapa lo bisa sampe mikir gitu?”</em> Jawaban “nggak tahu” atau “tergantung” tanpa contoh nggak dihitung.</p>
+    </article>
+    <div class="row"><button class="btn ghost" data-a="skip">Skip</button><button class="btn alt" data-a="twist">Plot twist</button></div>
+    <button class="btn go" data-a="next">Lanjut, ganti penanya</button>
+  </section>`;
+}
+
+function vBetween() {
+  const r = BY_ROUND[S.order[S.ri]];
+  const isMix = S.order[S.ri] === "mix";
+  return `<section class="screen"><div class="big-center">
+    <p class="label">${S.ri > 0 ? "Ronde sebelumnya kelar ✓ · Next" : "Ronde pertama"}</p>
+    <h1>${esc(isMix ? "Acak bebas" : r.name)}</h1>
+    <p class="muted">${esc(isMix ? "Semua pertanyaan dikocok" : r.sub)}</p>
+    ${r && r.hot ? `<p class="muted">Ini level paling nyelekit. Inget, skip itu boleh.</p>` : ""}
+  </div><button class="btn go" data-a="cont">Gas lanjut</button></section>`;
+}
+
+function vEnd() {
+  const ps = [...S.players].sort((a, b) => b.c - a.c);
+  return `<section class="screen"><div class="scroll"><div class="big-center">
+    <p class="label">Pertanyaan abis</p>
+    <h1>Udah <span>pada spill</span> semua?</h1>
+    <p class="muted">${S.used.length} pertanyaan kejawab malam ini.</p>
+    <div class="stats">${ps.map(p => `<div class="stat"><span>${esc(p.n)}</span><span>${p.c}x jawab</span></div>`).join("")}</div>
+  </div></div>
+  ${S.bonusDone ? "" : `<button class="btn go" data-a="bonus">Buka cadangan 🔥</button>`}
+  <div class="row"><button class="btn ghost" data-a="again">Main ulang</button><button class="btn ghost" data-a="quit">Ganti pemain</button></div></section>`;
+}
+
+const TUT = [
+  { t: "Halo, selamat datang 🚘", b: `<p>Ini game ngobrol buat nongkrong di mobil. Isinya pertanyaan soal cinta yang bikin mikir dulu, terus ujung-ujungnya <b>spill cerita</b>.</p><p>Cukup <b>satu HP</b>. Taruh di tengah atau oper-oper aja.</p>` },
+  { t: "1. Masukin nama", b: `<p>Ketik nama semua yang ikut, minimal 2 orang. Terus pilih gaya main.</p><p>Bingung? Pilih <b>Alur aman</b>: mulai yang ringan, makin dalem, terus final round.</p>`,
+    demo: `<div class="demo"><div class="names"><span class="name-chip">Dinda<button tabindex="-1">×</button></span><span class="name-chip">Raka<button tabindex="-1">×</button></span><span class="name-chip">Sasa<button tabindex="-1">×</button></span></div></div>` },
+  { t: "2. Penanya pilih korban", b: `<p>Tiap giliran ada satu <b>penanya</b>. Gantian otomatis, jadi semua kebagian.</p><p>Penanya tap nama siapa yang jawab, atau pencet <b>🎲 Acak aja</b>. Orang yang barusan jawab nggak bisa ditunjuk lagi langsung.</p>`,
+    demo: `<div class="demo"><p class="label">🎤 Yang nanya: Dinda</p><div class="whos"><div class="who on"><b>Raka</b><small>udah jawab 1x</small></div><div class="who"><b>Sasa</b><small>udah jawab 0x</small></div></div></div>` },
+  { t: "3. Roll, terus jawab jujur", b: `<p>Pencet <b>Roll pertanyaan</b>, kartu keluar. Yang ditunjuk wajib jawab jujur.</p><p>Abis itu satu orang wajib nanya: <b>“Kenapa lo bisa sampe mikir gitu?”</b> Jawab “tergantung” tanpa contoh nggak dihitung ya.</p>`,
+    demo: `<div class="demo"><p class="vs"><span class="a">🎤 Dinda nanya</span><span aria-hidden="true">→</span><span class="b">Raka jawab</span></p><p style="font-weight:800">Siapa orang yang kamu bilang “cuma temen”, padahal kamu tahu itu bohong?</p></div>` },
+  { t: "4. Tombol penyelamat", b: `<p><b>Skip</b>: ganti pertanyaan, nggak perlu kasih alasan.</p><p><b>Plot twist</b>: ada yang punya cerita kebalikannya? Spill.</p><p><b>Pilih nomor</b>: penanya milih nomor pertanyaan sendiri.</p><p><b>Lanjut</b>: penanya pindah ke orang berikutnya.</p>` },
+];
+function vTut() {
+  const i = ui.tut, s = TUT[i], last = i === TUT.length - 1;
+  return `<div class="sheet tut"><div role="dialog" aria-modal="true" aria-labelledby="tt">
+    <p class="step">CARA MAIN · ${i + 1}/${TUT.length}</p>
+    <h2 id="tt">${s.t}</h2>
+    <div class="body">${s.b}</div>
+    ${s.demo || ""}
+    <div class="dots" aria-hidden="true">${TUT.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("")}</div>
+    <div class="row">${i > 0 ? `<button class="btn ghost" data-a="tutp">Balik</button>` : `<button class="btn ghost" data-a="tutx">Lewati</button>`}<button class="btn go" data-a="${last ? "tutx" : "tutn"}">${last ? "Gas, ngerti!" : "Lanjut"}</button></div>
+  </div></div>`;
+}
+
+function vRules() {
+  return `<div class="sheet" data-a="close"><div role="dialog" aria-modal="true" aria-labelledby="rt">
+    <h2 id="rt">Aturan main</h2>
+    <ul class="rules">
+      <li><b>Random pick</b><span>Penanya yang milih siapa yang jawab. Bisa tap nama, bisa acak. Nggak boleh nunjuk orang yang barusan jawab.</span></li>
+      <li><b>No safe answer</b><span>“Nggak tahu”, “tergantung”, “semua orang beda” nggak dihitung kalau nggak ada contoh nyata.</span></li>
+      <li><b>One follow-up</b><span>Abis jawab, satu orang wajib nanya: “Kenapa lo bisa sampe mikir gitu?”</span></li>
+      <li><b>Plot twist</b><span>Siapa aja boleh bilang “Gue punya pengalaman kebalikannya” terus cerita.</span></li>
+      <li><b>Skip boleh</b><span>Kalau terlalu pribadi, skip aja. Nggak perlu jelasin alasannya.</span></li>
+    </ul>
+    <p class="muted">Tips: mulai dari yang ringan dulu. Cerita paling seru biasanya keluar pas semua udah ngerasa aman buat jujur.</p>
+    <button class="btn go" data-a="close">Oke, paham</button>
+  </div></div>`;
+}
+
+function vNums() {
+  const avail = new Set(S.order.flatMap(id => S.pools[id] || []));
+  const show = [];
+  for (let n = 1; n <= MAX_NO; n++) if (ALL[n].r !== "bn" || S.order.includes("bn")) show.push(n);
+  return `<div class="sheet" data-a="close"><div role="dialog" aria-modal="true" aria-labelledby="nt">
+    <h2 id="nt">Pilih nomor</h2>
+    <p class="muted">${esc(S.players[S.asker].n)} pilih nomor buat ${esc(S.players[S.answerer].n)}. Nomor yang dicoret udah kepake atau nggak ada di ronde yang dimainin.</p>
+    <div class="nums">${show.map(n => `<button class="num${ALL[n].r === "bn" ? " hot" : ""}" data-a="num" data-n="${n}" ${avail.has(n) ? "" : "disabled"}>${n}</button>`).join("")}</div>
+    <button class="btn ghost" data-a="close">Batal</button>
+  </div></div>`;
+}
+
+function render(anim = false) {
+  const views = { setup: vSetup, pick: vPick, card: () => vCard(anim), between: vBetween, end: vEnd };
+  if (!views[S.phase] || (S.phase === "card" && !S.q)) S.phase = S.players ? "pick" : "setup";
+  document.getElementById("app").innerHTML = views[S.phase]() + (ui.tut != null ? vTut() : "") + (ui.rules ? vRules() : "") + (ui.nums ? vNums() : "") + (ui.toast ? `<div class="toast" role="status">${esc(ui.toast)}</div>` : "");
+  save();
+}
+
+// ---------- events ----------
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-a]");
+  if (!t || t.disabled) return;
+  if (t.classList.contains("sheet") && e.target !== t) return;
+  const a = t.dataset.a;
+  const acts = {
+    del: () => { S.names.splice(+t.dataset.i, 1); S.example = false; },
+    preset: () => { const p = PRESETS[t.dataset.k]; S.preset = t.dataset.k; S.rounds = [...p.rounds]; S.mix = p.mix; },
+    round: () => { const id = t.dataset.id; S.rounds = S.rounds.includes(id) ? S.rounds.filter(x => x !== id) : [...S.rounds, id]; S.preset = null; },
+    start, roll, skip, next, spin,
+    who: () => { S.answerer = +t.dataset.i; buzz(15); },
+    twist: () => { ui.twist = !ui.twist; },
+    rules: () => { ui.rules = true; },
+    tut0: () => { ui.tut = 0; },
+    custom: () => { ui.custom = !ui.custom; },
+    tutn: () => { ui.tut++; },
+    tutp: () => { ui.tut--; },
+    tutx: () => { ui.tut = null; try { localStorage.setItem(TUT_KEY, "1"); } catch {} },
+    nums: () => { ui.nums = true; },
+    num: () => pickNumber(+t.dataset.n),
+    close: () => { ui.rules = false; ui.nums = false; },
+    cont: () => { S.phase = "pick"; },
+    bonus: openBonus,
+    again: () => start(),
+    quitx: () => { if (ui.armed) { ui.armed = false; acts.quit(); } else { ui.armed = true; setTimeout(() => ui.armed = false, 2500); toast("Tap ✕ sekali lagi buat keluar"); } },
+    quit: () => { const keep = S.names; S = fresh(); S.names = keep; S.example = false; try { lock && lock.release(); } catch {} },
+  };
+  const act = acts[a];
+  if (!act) return;
+  const handled = ["start", "roll", "skip", "next", "spin", "num", "bonus", "again"].includes(a);
+  act();
+  if (!handled) render();
+});
+document.addEventListener("submit", e => {
+  e.preventDefault();
+  const inp = document.getElementById("nm");
+  const vs = inp.value.split(",").map(v => v.trim().slice(0, 20)).filter(Boolean);
+  if (!vs.length) return;
+  if (S.example) { S.names = []; S.example = false; }
+  const before = S.names.length;
+  for (const v of vs) if (!S.names.some(n => n.toLowerCase() === v.toLowerCase())) S.names.push(v);
+  if (S.names.length - before < vs.length) toast("Nama yang dobel nggak dimasukin");
+  render();
+  document.getElementById("nm").focus();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && (ui.rules || ui.nums)) { ui.rules = ui.nums = false; render(); } });
+
+render();
+wake();
+</script>
+</body>
+</html>
